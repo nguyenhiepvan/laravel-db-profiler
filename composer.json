@@ -1,11 +1,11 @@
 {
-    "name": "illuminated/db-profiler",
+    "name": "nguyenhiep/db-profiler",
     "description": "Database Profiler for Laravel Web and Console Applications.",
     "keywords": ["laravel", "db", "database", "profiler", "profiling", "query", "sql", "mysql", "web-profiling", "console-profiling"],
     "license": "MIT",
     "support": {
-        "issues": "https://github.com/dmitry-ivanov/laravel-db-profiler/issues",
-        "source": "https://github.com/dmitry-ivanov/laravel-db-profiler"
+        "issues": "https://github.com/nguyenhiepvan/laravel-db-profiler/issues",
+        "source": "https://github.com/nguyenhiepvan/laravel-db-profiler"
     },
     "authors": [{
         "name": "Dmitry Ivanov",

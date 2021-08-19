@@ -2,21 +2,12 @@
 
 namespace Illuminated\Database;
 
-use Illuminate\Database\Events\QueryExecuted;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Str;
+use Illuminated\Database\Middleware\InjectQueries;
 
 class DbProfilerServiceProvider extends ServiceProvider
 {
-    /**
-     * The query counter.
-     *
-     * @var int
-     */
-    private $counter = 1;
-
     /**
      * Register the service provider.
      *
@@ -24,7 +15,12 @@ class DbProfilerServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/db-profiler.php', 'db-profiler');
+        $this->app->singleton(DbProfiler::class, function ($app) {
+            $profiler = new DbProfiler($app);
+            return $profiler;
+        });
+
+        $this->app->alias(DbProfiler::class, 'dbprofiler');
     }
 
     /**
@@ -36,54 +32,29 @@ class DbProfilerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (!$this->isEnabled()) {
-            return;
-        }
-
-        DB::listen(function (QueryExecuted $query) {
-            $i = $this->counter++;
-            $sql = $this->applyQueryBindings($query->sql, $query->bindings);
-            $time = $query->time;
-            dump("[{$i}]: {$sql}; ({$time} ms)");
-        });
+        $configPath = __DIR__ . '/../config/db-profiler.php';
+        $this->publishes([$configPath => $this->getConfigPath()], 'config');
+        $this->registerMiddleware(InjectQueries::class);
     }
 
     /**
-     * Check whether database profiling is enabled or not.
+     * Get the config path
      *
-     * @return bool
-     */
-    private function isEnabled()
-    {
-        if (!$this->app->isLocal() && !config('db-profiler.force')) {
-            return false;
-        }
-
-        return $this->app->runningInConsole()
-            ? collect($_SERVER['argv'])->contains('-vvv')
-            : Request::exists('vvv');
-    }
-
-    /**
-     * Apply query bindings to the given SQL query.
-     *
-     * @param string $sql
-     * @param array $bindings
      * @return string
      */
-    private function applyQueryBindings(string $sql, array $bindings)
+    protected function getConfigPath()
     {
-        $bindings = collect($bindings)->map(function ($binding) {
-            switch (gettype($binding)) {
-                case 'boolean':
-                    return (int) $binding;
-                case 'string':
-                    return "'{$binding}'";
-                default:
-                    return $binding;
-            }
-        })->toArray();
+        return config_path('db-profiler.php');
+    }
 
-        return Str::replaceArray('?', $bindings, $sql);
+    /**
+     * Register the Inject Queries Middleware
+     *
+     * @param string $middleware
+     */
+    protected function registerMiddleware($middleware)
+    {
+        $kernel = $this->app[Kernel::class];
+        $kernel->pushMiddleware($middleware);
     }
 }
