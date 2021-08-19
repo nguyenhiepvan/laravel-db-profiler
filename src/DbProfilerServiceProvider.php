@@ -10,19 +10,6 @@ class DbProfilerServiceProvider extends ServiceProvider
 {
 
     /**
-     * Register the service provider.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        $this->app->singleton(DbProfiler::class, function ($app) {
-            return new DbProfiler($app);
-        });
-
-    }
-
-    /**
      * Boot the service provider.
      *
      * @return void
