@@ -13,6 +13,6 @@ return [
     |
     */
 
-    'force' => env('DB_PROFILER_FORCE', true),
+    'force' => env('DB_PROFILER_FORCE', false),
 
 ];
