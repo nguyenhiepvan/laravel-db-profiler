@@ -15,4 +15,11 @@ return [
 
     'force' => env('DB_PROFILER_FORCE', false),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Append items name to responses data json
+    |--------------------------------------------------------------------------
+    */
+
+    'append' => env('DB_PROFILER_APPEND', "queries")
 ];

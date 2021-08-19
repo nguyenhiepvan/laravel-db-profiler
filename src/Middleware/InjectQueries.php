@@ -39,7 +39,7 @@ class InjectQueries
      * @param Closure $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
         if (!$this->profiler->isEnabled()) {
             return $next($request);

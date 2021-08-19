@@ -41,9 +41,9 @@ class DbProfiler
 
 
     /**
-     * @param Application $app
+     * @param Application|null $app
      */
-    public function __construct($app = null)
+    public function __construct(Application $app = null)
     {
         if (!$app) {
             $app = app();   //Fallback when $app is not given
@@ -57,7 +57,7 @@ class DbProfiler
      * @return void
      *
      */
-    public function boot()
+    public function boot(): void
     {
         if (!$this->isEnabled()) {
             return;
@@ -77,7 +77,7 @@ class DbProfiler
     /**
      * @return bool
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         if (!$this->app->isLocal() && !config('db-profiler.force')) {
             return false;
@@ -96,9 +96,9 @@ class DbProfiler
     public function modifyResponse($response)
     {
         if ($response instanceof JsonResponse) {
-            $contents            = json_decode($response->getContent(), true);
-            $contents["queries"] = self::$queries;
-            $contents            = json_encode($contents);
+            $contents                               = json_decode($response->getContent(), true);
+            $contents[config("db-profiler.append")] = self::$queries;
+            $contents                               = json_encode($contents);
         } else {
             $contents = str_replace("</body>",
                 implode("\n", self::$queries) . "</body>",
@@ -114,7 +114,7 @@ class DbProfiler
      * @param array $bindings
      * @return string
      */
-    private function applyQueryBindings(string $sql, array $bindings)
+    private function applyQueryBindings(string $sql, array $bindings): string
     {
         $bindings = collect($bindings)->map(function ($binding) {
             switch (gettype($binding)) {

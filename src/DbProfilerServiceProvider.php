@@ -13,10 +13,8 @@ class DbProfilerServiceProvider extends ServiceProvider
      * Boot the service provider.
      *
      * @return void
-     *
-     * @noinspection ForgottenDebugOutputInspection
      */
-    public function boot()
+    public function boot(): void
     {
         $configPath = __DIR__ . '/../config/db-profiler.php';
         $this->publishes([$configPath => $this->getConfigPath()], 'config');
@@ -31,7 +29,7 @@ class DbProfilerServiceProvider extends ServiceProvider
      *
      * @return string
      */
-    protected function getConfigPath()
+    protected function getConfigPath(): string
     {
         return config_path('db-profiler.php');
     }
@@ -41,7 +39,7 @@ class DbProfilerServiceProvider extends ServiceProvider
      *
      * @param string $middleware
      */
-    protected function registerMiddleware($middleware)
+    protected function registerMiddleware(string $middleware): void
     {
         $kernel = $this->app[Kernel::class];
         $kernel->pushMiddleware($middleware);
