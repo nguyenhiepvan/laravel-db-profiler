@@ -13,6 +13,7 @@
 3. Use the `vvv` parameter for Web:
 
     ![Laravel Database Profiler - Demo - Web](doc/img/demo-web-c.gif)
+    ![Laravel Database Profiler - Demo - Ajax request](doc/img/demo-ajax.gif)
 
 4. Use the `-vvv` option for Console:
 
