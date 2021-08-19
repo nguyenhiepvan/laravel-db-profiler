@@ -47,7 +47,6 @@ class InjectQueries
 
         $this->profiler->boot();
 
-        /** @var \Illuminate\Http\Response $response */
         $response = $next($request);
 
         return $this->profiler->modifyResponse($response);

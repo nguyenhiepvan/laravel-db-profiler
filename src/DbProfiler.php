@@ -90,15 +90,15 @@ class DbProfiler
 
 
     /**
-     * @param Response $response
+     * @param Response|JsonResponse $response
      * @return JsonResponse|Response
      */
-    public function modifyResponse(Response $response)
+    public function modifyResponse($response)
     {
         if ($response instanceof JsonResponse) {
             $contents            = json_decode($response->getContent(), true);
             $contents["queries"] = self::$queries;
-            $contents            = json_decode($contents);
+            $contents            = json_encode($contents);
         } else {
             $contents = str_replace("</body>",
                 implode("\n", self::$queries) . "</body>",
