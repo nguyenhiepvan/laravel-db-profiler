@@ -8,6 +8,7 @@ use Illuminated\Database\Middleware\InjectQueries;
 
 class DbProfilerServiceProvider extends ServiceProvider
 {
+
     /**
      * Register the service provider.
      *
@@ -16,11 +17,9 @@ class DbProfilerServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(DbProfiler::class, function ($app) {
-            $profiler = new DbProfiler($app);
-            return $profiler;
+            return new DbProfiler($app);
         });
 
-        $this->app->alias(DbProfiler::class, 'dbprofiler');
     }
 
     /**
@@ -35,6 +34,9 @@ class DbProfilerServiceProvider extends ServiceProvider
         $configPath = __DIR__ . '/../config/db-profiler.php';
         $this->publishes([$configPath => $this->getConfigPath()], 'config');
         $this->registerMiddleware(InjectQueries::class);
+        if ($this->app->runningInConsole()) {
+           (new DbProfiler($this->app))->boot();
+        }
     }
 
     /**
