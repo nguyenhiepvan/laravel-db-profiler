@@ -4,7 +4,7 @@
 1. Install the package via Composer:
 
     ```shell script
-    composer require nguyenhiep/db-profiler
+    composer require nguyenhiep/db-profiler:v1.2
     ```
 2. Publish config
     ```shell script
