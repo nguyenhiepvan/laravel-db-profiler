@@ -82,10 +82,9 @@ class DbProfiler
         if (!$this->app->isLocal() && !config('db-profiler.force')) {
             return false;
         }
-
         return $this->app->runningInConsole()
             ? collect($_SERVER['argv'])->contains('-vvv')
-            : Request::exists('vvv');
+            : (Request::exists('vvv') || strpos(Request::header("referer", ""), "vvv") !== false);
     }
 
 
