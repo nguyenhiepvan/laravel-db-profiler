@@ -37,7 +37,7 @@ class DbProfiler
     /**
      * @var array
      */
-    private static $queries = [];
+    public static $queries = [];
 
 
     /**
